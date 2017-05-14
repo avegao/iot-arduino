@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.avegao.iot.arduino";
+option java_outer_classname = "IotArduinoProto";
+option objc_class_prefix = "RTG";
+
+package arduino_service;
+
+service Arduino {
+    rpc GetTemperature(ArduinoRequest) returns (GetTemperatureResponse);
+    rpc IsPower(ArduinoRequest) returns (PowerResponse);
+    rpc PowerOff(ArduinoRequest) returns (PowerResponse);
+    rpc PowerOn(ArduinoRequest) returns (PowerResponse);
+}
+
+message ArduinoRequest {
+    int32 id = 1;
+    string name = 2;
+    string url = 3;
+}
+
+message GetTemperatureResponse {
+    float temperature = 1;
+}
+
+message PowerResponse {
+    bool power = 1;
+}
+
