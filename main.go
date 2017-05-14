@@ -58,6 +58,8 @@ func main() {
         logrus.Fatalf("failed to listen: %v", err)
     }
 
+    logrus.Debugf("gRPC listening in %d port", PORT)
+
     s := grpc.NewServer()
     pb.RegisterArduinoServer(s, &server{})
     reflection.Register(s)
