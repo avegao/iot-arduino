@@ -6,7 +6,7 @@ import (
     "google.golang.org/grpc"
     "google.golang.org/grpc/reflection"
     "golang.org/x/net/context"
-    pb "github.com/avegao/iotArduino/proto"
+    pb "github.com/avegao/iot-arduino/proto"
 )
 
 const (
