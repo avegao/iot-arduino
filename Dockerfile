@@ -1,4 +1,4 @@
-FROM golang:1.8.1-alpine
+FROM golang:1.8.1-alpine AS build-env
 
 WORKDIR /go
 
@@ -16,6 +16,11 @@ COPY . /go/src/github.com/avegao/iotArduino
 
 RUN cd /go/src/github.com/avegao/iotArduino && go install
 
+
+FROM alpine:3.5
+WORKDIR /app
+COPY --from=build-env /go/bin/iotArduino /app/iotArduino
+
 EXPOSE 50000
 
-CMD ./bin/iotArduino
+CMD ./iotArduino
