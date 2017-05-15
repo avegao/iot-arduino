@@ -5,8 +5,8 @@ import (
     "net"
     "google.golang.org/grpc"
     "google.golang.org/grpc/reflection"
-    "golang.org/x/net/context"
     pb "github.com/avegao/iot-arduino/proto"
+    "golang.org/x/net/context"
 )
 
 const (
@@ -43,6 +43,7 @@ func (s *server) PowerOff(ctx context.Context, in *pb.ArduinoRequest) (*pb.Power
 
 func init() {
     initLogger()
+    initGrpc()
 }
 
 func initLogger() {
@@ -51,7 +52,7 @@ func initLogger() {
     logrus.SetLevel(logrus.DebugLevel)
 }
 
-func main() {
+func initGrpc() {
     listen, err := net.Listen("tcp", PORT)
 
     if err != nil {
@@ -76,4 +77,8 @@ func parseArduinoRequest(request *pb.ArduinoRequest) *Arduino {
     arduino.Hostname = request.Url
 
     return arduino
+}
+
+func main() {
+
 }

@@ -1,0 +1,17 @@
+package: github.com/avegao/iot-arduino
+import:
+- package: github.com/Sirupsen/logrus
+  version: ^0.11.5
+- package: github.com/golang/protobuf
+  subpackages:
+  - proto
+- package: github.com/hooklift/httpclient
+- package: golang.org/x/net
+  subpackages:
+  - context
+- package: google.golang.org/grpc
+  version: ^1.3.0
+  subpackages:
+  - reflection
+- package: github.com/jinzhu/gorm
+  version: ^1.0.0

@@ -1,26 +1,27 @@
 FROM golang:1.8.1-alpine AS build-env
 
-WORKDIR /go
+RUN mkdir -p /go/src/github.com/avegao/iot-arduino
 
-RUN apk add --no-cache git
+WORKDIR /go/src/github.com/avegao/iot-arduino
 
-RUN go get -u github.com/golang/protobuf/proto && \
-#    go get -u github.com/golang/protobuf/protoc-gen-go && \
-    go get -u github.com/hooklift/httpclient && \
-    go get -u github.com/Sirupsen/logrus && \
-    go get -u golang.org/x/net/context && \
-    go get -u google.golang.org/grpc && \
-    go get -u google.golang.org/grpc/reflection
+RUN apk add --no-cache git glide
 
-COPY . /go/src/github.com/avegao/iotArduino
+COPY glide.yaml glide.yaml
+COPY glide.lock glide.lock
 
-RUN cd /go/src/github.com/avegao/iotArduino && go install
+RUN glide install
+
+COPY . .
+
+RUN go install && ls -lah
 
 
 FROM alpine:3.5
 WORKDIR /app
-COPY --from=build-env /go/bin/iotArduino /app/iotArduino
+COPY --from=build-env /go/bin/iot-arduino /app/iot-arduino
 
 EXPOSE 50000
 
-CMD ./iotArduino
+LABEL maintainer="Álvaro de la Vega Olmedilla <alvarodlvo@gmail.com>"
+
+CMD ./iot-arduino
