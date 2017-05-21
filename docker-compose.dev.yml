@@ -1,0 +1,25 @@
+version: "3.1"
+
+services:
+  iot-go:
+    image: avegao/iot-arduino
+    container_name: iot_arduino
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    ports:
+       - "5000:50000"
+    depends_on:
+       - "iot-mysql"
+#    command: ping iot_mysql
+
+  iot-mysql:
+    image: mariadb:10.1.23
+    container_name: iot_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "iot"
+      MYSQL_USER: "iot"
+      MYSQL_PASSWORD: "iot"
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"

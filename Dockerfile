@@ -13,8 +13,9 @@ RUN glide install
 
 COPY . .
 
-RUN go install && ls -lah
+RUN go install
 
+########################################################################################################################
 
 FROM alpine:3.5
 WORKDIR /app

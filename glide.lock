@@ -1,20 +1,29 @@
-hash: 044ad04586f31917b0412102b1543b9c86061385207bacd89f8108fd24887a95
-updated: 2017-05-15T21:02:12.05568089+02:00
+hash: 4221f8b7032a1b469228cf52b0479acd62c8a76129c31368cf6020d5a3c0f8c9
+updated: 2017-05-20T22:51:11.049434578+02:00
 imports:
+- name: github.com/go-sql-driver/mysql
+  version: 382e13d099fcf5f5994290892ab258fbebbdc5e3
 - name: github.com/golang/protobuf
   version: fec3b39b059c0f88fa6b20f5ed012b1aa203a8b4
   subpackages:
   - proto
+  - protoc-gen-go
   - protoc-gen-go/descriptor
   - ptypes/any
 - name: github.com/hooklift/httpclient
   version: 9319ee9c9f8ebd15041916b89a91e32c46d7e02e
 - name: github.com/jinzhu/gorm
   version: 5174cc5c242a728b435ea2be8a2f7f998e15429b
+  subpackages:
+  - dialects/mysql
+- name: github.com/jinzhu/inflection
+  version: 1c35d901db3da928c72a72d8458480cc9ade058f
+- name: github.com/o1egl/gormrus
+  version: 57710b0229272260f1fa2b31838a0dc4baa22a0a
 - name: github.com/Sirupsen/logrus
   version: ba1b36c82c5e05c4f912a88eab0dcd91a171688f
 - name: golang.org/x/net
-  version: 34057069f4ab13dc4433c68d368737ebeafcccdc
+  version: 513929065c19401a1c7b76ecd942f9f86a0c061b
   subpackages:
   - context
   - http2
@@ -24,7 +33,7 @@ imports:
   - lex/httplex
   - trace
 - name: golang.org/x/sys
-  version: 1e99a4f9d247b28c670884b9a8d6801f39a47b77
+  version: a2e06a18b0d52d8cb2010e04b372a1965d8e3439
   subpackages:
   - unix
 - name: golang.org/x/text
@@ -35,7 +44,7 @@ imports:
   - unicode/bidi
   - unicode/norm
 - name: google.golang.org/genproto
-  version: 411e09b969b1170a9f0c467558eb4c4c110d9c77
+  version: bb3573be0c484136831138976d444b8754777aff
   subpackages:
   - googleapis/rpc/status
 - name: google.golang.org/grpc

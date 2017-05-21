@@ -12,10 +12,11 @@ service Arduino {
     rpc IsPower(ArduinoRequest) returns (PowerResponse);
     rpc PowerOff(ArduinoRequest) returns (PowerResponse);
     rpc PowerOn(ArduinoRequest) returns (PowerResponse);
+    rpc ListAll(ListAllRequest) returns (ListAllResponse);
 }
 
 message ArduinoRequest {
-    int32 id = 1;
+    uint32 id = 1;
     string name = 2;
     string url = 3;
 }
@@ -28,3 +29,15 @@ message PowerResponse {
     bool power = 1;
 }
 
+message ListAllRequest {}
+
+message ListAllResponse {
+    repeated ArduinoResponse results = 1;
+}
+
+message ArduinoResponse {
+    uint32 id = 1;
+    string name = 2;
+    string url = 3;
+    bool auto = 4;
+}

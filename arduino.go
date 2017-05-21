@@ -12,7 +12,7 @@ var (
     powerOffUrl = "http://%s/arduino/temp/power/off"
 )
 
-type Arduino struct {
+type ArduinoRequest struct {
     Id int32 `json:"id"`
     Name string `json:"name"`
     Hostname string `json:"hostname"`
@@ -27,7 +27,7 @@ type ArduinoPowerResponse struct {
     Command string `json:"command"`
 }
 
-func (arduino Arduino) GetArduinoTemp() float32 {
+func (arduino ArduinoRequest) GetArduinoTemp() float32 {
     temperatureResponse := new(ArduinoTemperatureResponse)
     url := fmt.Sprintf(getTemperatureUrl, arduino.Hostname)
 
@@ -45,7 +45,7 @@ func (arduino Arduino) GetArduinoTemp() float32 {
     return temperatureResponse.Temperature
 }
 
-func (arduino Arduino) IsPower() bool {
+func (arduino ArduinoRequest) IsPower() bool {
     powerResponse := new(ArduinoPowerResponse)
     url := fmt.Sprintf(isPowerUrl, arduino.Hostname)
 
@@ -63,7 +63,7 @@ func (arduino Arduino) IsPower() bool {
     return powerResponse.Power
 }
 
-func (arduino Arduino) PowerOn() bool {
+func (arduino ArduinoRequest) PowerOn() bool {
     powerResponse := new(ArduinoPowerResponse)
     url := fmt.Sprintf(powerOnUrl, arduino.Hostname)
 
@@ -81,7 +81,7 @@ func (arduino Arduino) PowerOn() bool {
     return powerResponse.Power
 }
 
-func (arduino Arduino) PowerOff() bool {
+func (arduino ArduinoRequest) PowerOff() bool {
     powerResponse := new(ArduinoPowerResponse)
     url := fmt.Sprintf(powerOffUrl, arduino.Hostname)
 

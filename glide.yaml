@@ -5,6 +5,7 @@ import:
 - package: github.com/golang/protobuf
   subpackages:
   - proto
+  - protoc-gen-go
 - package: github.com/hooklift/httpclient
 - package: golang.org/x/net
   subpackages:
@@ -15,3 +16,6 @@ import:
   - reflection
 - package: github.com/jinzhu/gorm
   version: ^1.0.0
+  subpackages:
+  - dialects/mysql
+- package: github.com/o1egl/gormrus

@@ -6,79 +6,111 @@ import (
     "google.golang.org/grpc"
     "google.golang.org/grpc/reflection"
     pb "github.com/avegao/iot-arduino/proto"
-    "golang.org/x/net/context"
+    "github.com/jinzhu/gorm"
+    _ "github.com/jinzhu/gorm/dialects/mysql"
+    "time"
+    "os"
+    "github.com/o1egl/gormrus"
 )
 
 const (
     PORT = ":50000"
+    ENV_DEV = "dev"
+    ENV_TEST = "test"
+    ENV_PRE = "pre"
+    ENV_PROD = "prod"
 )
 
-type server struct {}
+var database *gorm.DB
+var ENV = os.Getenv("GO_ENV")
 
-func (s *server) GetTemperature(ctx context.Context, in *pb.ArduinoRequest) (*pb.GetTemperatureResponse, error) {
-    arduino := parseArduinoRequest(in)
-
-    return &pb.GetTemperatureResponse{Temperature: arduino.GetArduinoTemp()}, nil
+func isDev() bool {
+    return ENV_DEV == ENV
 }
 
-func (s *server) IsPower(ctx context.Context, in *pb.ArduinoRequest) (*pb.PowerResponse, error) {
-    arduino := parseArduinoRequest(in)
-
-    return &pb.PowerResponse{Power: arduino.IsPower()}, nil
+func isTest() bool {
+    return ENV_TEST == ENV
 }
 
-func (s *server) PowerOn(ctx context.Context, in *pb.ArduinoRequest) (*pb.PowerResponse, error) {
-    arduino := parseArduinoRequest(in)
-
-    return &pb.PowerResponse{Power: arduino.PowerOn()}, nil
+func isPre() bool {
+    return ENV_PRE == ENV
 }
 
-
-func (s *server) PowerOff(ctx context.Context, in *pb.ArduinoRequest) (*pb.PowerResponse, error) {
-    arduino := parseArduinoRequest(in)
-
-    return &pb.PowerResponse{Power: arduino.PowerOff()}, nil
-}
-
-
-func init() {
-    initLogger()
-    initGrpc()
+func isProd() bool {
+    return ENV_PROD == ENV
 }
 
 func initLogger() {
+    logLevel := logrus.ErrorLevel
+
+    if isDev() || isTest() {
+        logLevel = logrus.DebugLevel
+    } else if isPre() {
+        logLevel = logrus.WarnLevel
+    }
+
     logrus.SetFormatter(&logrus.JSONFormatter{})
     logrus.SetFormatter(&logrus.TextFormatter{})
-    logrus.SetLevel(logrus.DebugLevel)
+    logrus.SetLevel(logLevel)
 }
 
 func initGrpc() {
+    logrus.Debugf("initGrpc() - START")
+
     listen, err := net.Listen("tcp", PORT)
 
     if err != nil {
         logrus.Fatalf("failed to listen: %v", err)
     }
 
-    logrus.Debugf("gRPC listening in %d port", PORT)
+    logrus.Debugf("gRPC listening in %s port", PORT)
 
     s := grpc.NewServer()
-    pb.RegisterArduinoServer(s, &server{})
+    pb.RegisterArduinoServer(s, &Controller{})
     reflection.Register(s)
 
     if err := s.Serve(listen); err != nil {
         logrus.Fatalf("failed to server: %v", err)
     }
+
+    logrus.Debugf("initGrpc() - END")
 }
 
-func parseArduinoRequest(request *pb.ArduinoRequest) *Arduino {
-    arduino := new(Arduino)
-    arduino.Id = request.Id
-    arduino.Name = request.Name
-    arduino.Hostname = request.Url
+func initDatabase() {
+    logrus.Debugf("initDatabase() - START")
 
-    return arduino
+    if isDev() {
+        time.Sleep(time.Second * 15)
+    }
+
+    db, err := gorm.Open("mysql", "iot:iot@tcp(iot_mysql:3306)/iot?charset=utf8&parseTime=True&loc=Local")
+    db.LogMode(true)
+    db.SetLogger(gormrus.New())
+
+    if nil != err {
+        logrus.Fatalf("Database connection error: %s", err)
+    }
+
+    logrus.Debug("Database connected")
+
+    database = db
+
+    logrus.Debugf("initDatabase() - END")
+}
+
+func stop() {
+    defer database.Close()
+    os.Exit(0)
 }
 
 func main() {
+    if "" == ENV {
+        ENV = "dev"
+    }
 
+    initLogger()
+    initDatabase()
+    initGrpc()
+
+    stop()
 }
