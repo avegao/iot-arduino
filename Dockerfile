@@ -25,4 +25,4 @@ EXPOSE 50000
 
 LABEL maintainer="Álvaro de la Vega Olmedilla <alvarodlvo@gmail.com>"
 
-CMD ./iot-arduino
+ENTRYPOINT ["./iot-arduino"]
